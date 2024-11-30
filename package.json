@@ -2,6 +2,29 @@
   "name": "@jagadhis/fullstack-monorepo-template",
   "version": "1.0.0",
   "private": false,
+  "description": "A full-stack monorepo template with Next.js, Node.js, Supabase, and Prisma",
+  "keywords": [
+    "monorepo",
+    "template",
+    "nextjs",
+    "nodejs",
+    "typescript",
+    "supabase",
+    "prisma",
+    "fullstack",
+    "turbo",
+    "turborepo"
+  ],
+  "author": "jagadhis",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/jagadhis/fullstack-monorepo-template.git"
+  },
+  "homepage": "https://github.com/jagadhis/fullstack-monorepo-template#readme",
+  "bugs": {
+    "url": "https://github.com/jagadhis/fullstack-monorepo-template/issues"
+  },
   "workspaces": [
     "apps/*",
     "packages/*"
@@ -30,10 +53,6 @@
     "prepare": "lefthook install",
     "release": "semantic-release"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "description": "",
   "devDependencies": {
     "@commitlint/cli": "^19.6.0",
     "@commitlint/config-conventional": "^19.6.0",

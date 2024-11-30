@@ -21,12 +21,28 @@ try {
   // Copy template files
   execSync(`cp -r ${path.join(__dirname, '../')}* ${projectDir}`);
 
+  // Remove git related files and node_modules
+  execSync(`rm -rf ${projectDir}/.git ${projectDir}/node_modules ${projectDir}/apps/*/node_modules ${projectDir}/packages/*/node_modules`);
+
   console.log('Installing dependencies...');
   process.chdir(projectDir);
-  execSync('npm install');
+
+  // Initialize new git repository
+  execSync('git init');
+
+  // Install dependencies without running scripts
+  execSync('npm install --ignore-scripts');
+
+  // Install lefthook separately
+  try {
+    execSync('npx lefthook install', { stdio: 'inherit' });
+  } catch (error) {
+    console.log('Note: Lefthook installation skipped, you can install it later with: npx lefthook install');
+  }
 
   console.log(`
 Success! Created ${projectName} at ${projectDir}
+
 Inside that directory, you can run several commands:
 
   npm run dev
@@ -37,6 +53,9 @@ Inside that directory, you can run several commands:
 
   npm run lint
     Lints the code.
+
+To set up git hooks (optional):
+  npx lefthook install
 
 Start developing by typing:
 
