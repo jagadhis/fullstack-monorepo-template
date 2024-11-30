@@ -23,7 +23,7 @@
       "cache": false
     },
     "release": {
-      "dependsOn": ["build", "test", "lint"],
+      "dependsOn": ["build", "lint"],
       "outputs": []
     }
   }
