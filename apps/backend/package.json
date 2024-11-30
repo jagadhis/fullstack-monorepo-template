@@ -5,8 +5,12 @@
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "publishConfig": {
-    "access": "public"
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
   },
+  "files": [
+    "dist"
+  ],
   "scripts": {
     "dev": "ts-node-dev src/index.ts",
     "build": "tsc -p tsconfig.json",

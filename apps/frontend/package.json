@@ -3,8 +3,13 @@
   "version": "1.0.0",
   "private": true,
   "publishConfig": {
-    "access": "public"
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
   },
+  "files": [
+    "dist",
+    ".next"
+  ],
   "scripts": {
     "dev": "next dev --turbopack",
     "build": "next build",

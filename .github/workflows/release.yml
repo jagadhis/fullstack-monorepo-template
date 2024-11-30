@@ -1,47 +1,44 @@
-name: Release
+name: Build and Release
+
 on:
   push:
-    branches: [master]
+    branches:
+      - master
 
 jobs:
   release:
-    name: Release
+    name: Build and Release
     runs-on: ubuntu-latest
     permissions:
       contents: write
       packages: write
+      pull-requests: write
+      id-token: write
+      issues: write
+    env:
+      NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           fetch-depth: 0
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v3
+      - name: Install Node
+        uses: actions/setup-node@v4
         with:
-          node-version: 20.8.1
+          node-version: 20
           registry-url: 'https://registry.npmjs.org'
-
-      - name: Git Identity
-        run: |
-          git config --global user.name 'github-actions[bot]'
-          git config --global user.email 'github-actions[bot]@users.noreply.github.com'
 
       - name: Install dependencies
         run: npm ci
 
-      - name: Build
+      - name: Build packages
         run: npm run build
 
-      - name: Release
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+      - name: Release packages
         run: |
-          cd apps/frontend && npm run release
-          cd ../backend && npm run release
-          cd ../../packages/types && npm run release
-
-      - name: Cleanup
-        if: always()
-        run: git checkout .
+          cd apps/frontend && npx semantic-release
+          cd ../backend && npx semantic-release
+          cd ../../packages/types && npx semantic-release
