@@ -1,5 +1,4 @@
 name: Build and Release
-
 on:
   push:
     branches:
@@ -32,13 +31,44 @@ jobs:
           registry-url: 'https://registry.npmjs.org'
 
       - name: Install dependencies
-        run: npm ci
+        run: npm install
 
       - name: Build packages
         run: npm run build
 
-      - name: Release packages
+      - name: Setup NPM
         run: |
-          cd apps/frontend && npx semantic-release
-          cd ../backend && npx semantic-release
-          cd ../../packages/types && npx semantic-release
+          echo "//registry.npmjs.org/:_authToken=${{ secrets.NPM_TOKEN }}" > ~/.npmrc
+          npm config set access public
+          echo "NPM config:"
+          npm config list
+          echo "NPM whoami:"
+          npm whoami
+
+      - name: Release Frontend
+        run: |
+          echo "Publishing Frontend..."
+          cd apps/frontend
+          echo "Current directory: $(pwd)"
+          cat package.json
+          npx semantic-release --debug
+
+      - name: Release Backend
+        run: |
+          echo "Publishing Backend..."
+          cd apps/backend
+          echo "Current directory: $(pwd)"
+          cat package.json
+          npx semantic-release --debug
+
+      - name: Release Types
+        run: |
+          echo "Publishing Types..."
+          cd packages/types
+          echo "Current directory: $(pwd)"
+          cat package.json
+          npx semantic-release --debug
+
+      - name: Cleanup
+        if: always()
+        run: rm -f ~/.npmrc
