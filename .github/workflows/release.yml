@@ -22,7 +22,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: 18
+          node-version: 20.8.1
           registry-url: 'https://registry.npmjs.org'
 
       - name: Configure npm
@@ -41,11 +41,8 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
-        run: |
-          # Skip tests for now
-          npm run release --no-test
+        run: npm run release
 
-      # Clean up .npmrc to remove token
       - name: Cleanup
         if: always()
         run: rm -f .npmrc
