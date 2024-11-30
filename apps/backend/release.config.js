@@ -1,15 +1,16 @@
 /** @type {import('semantic-release').GlobalConfig} */
 const config = {
-  branches: [
-    'master',
-    { name: 'beta', prerelease: true }
-  ],
+  branches: ['master'],
   plugins: [
     '@semantic-release/commit-analyzer',
     '@semantic-release/release-notes-generator',
-    '@semantic-release/npm',
+    ['@semantic-release/npm', {
+      npmPublish: true,
+      tarballDir: 'dist'
+    }],
     '@semantic-release/github'
-  ]
+  ],
+  debug: true
 }
 
 module.exports = config
