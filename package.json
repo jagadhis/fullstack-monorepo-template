@@ -1,10 +1,24 @@
 {
-  "name": "fullstack-monorepo-template",
+  "name": "@jagadhis/fullstack-monorepo-template",
   "version": "1.0.0",
-  "private": true,
+  "private": false,
   "workspaces": [
     "apps/*",
     "packages/*"
+  ],
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
+  },
+  "bin": {
+    "create-fullstack-monorepo": "./bin/create-app.js"
+  },
+  "files": [
+    "apps/*/dist",
+    "apps/*/src",
+    "packages/*/dist",
+    "packages/*/src",
+    "bin"
   ],
   "packageManager": "npm@10.8.2",
   "scripts": {
@@ -13,8 +27,8 @@
     "lint": "turbo run lint",
     "test": "turbo run test",
     "clean": "turbo run clean && rm -rf node_modules",
-    "release": "turbo run release",
-    "prepare": "lefthook install"
+    "prepare": "lefthook install",
+    "release": "semantic-release"
   },
   "keywords": [],
   "author": "",

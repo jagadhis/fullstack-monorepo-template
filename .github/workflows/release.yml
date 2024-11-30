@@ -1,74 +1,50 @@
-name: Build and Release
+name: Release
 on:
   push:
-    branches:
-      - master
+    branches: [master]
 
 jobs:
   release:
-    name: Build and Release
+    name: Release
     runs-on: ubuntu-latest
     permissions:
       contents: write
-      packages: write
-      pull-requests: write
-      id-token: write
       issues: write
-    env:
-      NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
-      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      pull-requests: write
+      packages: write
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v3
         with:
           fetch-depth: 0
 
-      - name: Install Node
-        uses: actions/setup-node@v4
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
         with:
-          node-version: 20
-          registry-url: 'https://registry.npmjs.org'
+          node-version: 20.8.1
+          registry-url: 'https://registry.npmjs.org/'
 
       - name: Install dependencies
         run: npm install
 
-      - name: Build packages
+      - name: Build
         run: npm run build
 
       - name: Setup NPM
         run: |
-          echo "//registry.npmjs.org/:_authToken=${{ secrets.NPM_TOKEN }}" > ~/.npmrc
+          echo "//registry.npmjs.org/:_authToken=${NPM_TOKEN}" > .npmrc
           npm config set access public
-          echo "NPM config:"
-          npm config list
-          echo "NPM whoami:"
-          npm whoami
+        env:
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
 
-      - name: Release Frontend
-        run: |
-          echo "Publishing Frontend..."
-          cd apps/frontend
-          echo "Current directory: $(pwd)"
-          cat package.json
-          npx semantic-release --debug
-
-      - name: Release Backend
-        run: |
-          echo "Publishing Backend..."
-          cd apps/backend
-          echo "Current directory: $(pwd)"
-          cat package.json
-          npx semantic-release --debug
-
-      - name: Release Types
-        run: |
-          echo "Publishing Types..."
-          cd packages/types
-          echo "Current directory: $(pwd)"
-          cat package.json
-          npx semantic-release --debug
+      - name: Release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+        run: npx semantic-release
 
       - name: Cleanup
         if: always()
-        run: rm -f ~/.npmrc
+        run: rm -f .npmrc

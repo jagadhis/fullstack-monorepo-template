@@ -3,8 +3,10 @@
   "version": "0.0.0-development",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
+  "private": true,
   "publishConfig": {
-    "access": "public"
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
   },
   "scripts": {
     "build": "tsc -p tsconfig.json",
