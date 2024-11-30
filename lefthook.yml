@@ -8,4 +8,5 @@ pre-commit:
 commit-msg:
   commands:
     lint-commit-msg:
+      exclude: 'chore\(release\):'
       run: npx commitlint --edit {1}
