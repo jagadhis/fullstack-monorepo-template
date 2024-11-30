@@ -6,12 +6,16 @@
     "dev": "next dev --turbopack",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "clean": "rm -rf .turbo node_modules .next",
+    "release": "semantic-release"
   },
+  "packageManager": "npm@10.8.2",
   "dependencies": {
     "next": "15.0.3",
     "react": "19.0.0-rc-66855b96-20241106",
-    "react-dom": "19.0.0-rc-66855b96-20241106"
+    "react-dom": "19.0.0-rc-66855b96-20241106",
+    "@supabase/supabase-js": "^2.0.0"
   },
   "devDependencies": {
     "@semantic-release/git": "^10.0.1",
