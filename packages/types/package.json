@@ -1,9 +1,14 @@
 {
   "name": "types",
-  "version": "1.0.0",
-  "main": "index.js",
+  "version": "0.0.0-development",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "publishConfig": {
+    "access": "public"
+  },
   "scripts": {
-    "build": "tsc",
+    "build": "tsc -p tsconfig.json",
+    "clean": "rimraf dist",
     "test": "echo 'No tests yet'",
     "release": "semantic-release"
   },
@@ -13,6 +18,7 @@
   "license": "ISC",
   "description": "",
   "devDependencies": {
+    "rimraf": "^5.0.10",
     "typescript": "^5.7.2"
   }
 }

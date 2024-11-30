@@ -1,7 +1,12 @@
 {
   "name": "backend",
-  "version": "1.0.0",
-  "main": "index.js",
+  "version": "0.0.0-development",
+  "private": false,
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "publishConfig": {
+    "access": "public"
+  },
   "scripts": {
     "dev": "ts-node-dev src/index.ts",
     "build": "tsc -p tsconfig.json",
