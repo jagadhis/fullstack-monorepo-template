@@ -37,11 +37,16 @@
     "create-fullstack-monorepo": "./bin/create-app.js"
   },
   "files": [
-    "apps/*/dist",
-    "apps/*/src",
-    "packages/*/dist",
-    "packages/*/src",
-    "bin"
+    "apps/",
+    "packages/",
+    "bin/",
+    ".gitignore",
+    "turbo.json",
+    "README.md",
+    "package.json",
+    "tsconfig.json",
+    ".commitlintrc.yaml",
+    "lefthook.yml"
   ],
   "packageManager": "npm@10.8.2",
   "scripts": {
