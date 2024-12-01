@@ -38,11 +38,6 @@
   ],
   "packageManager": "npm@10.8.2",
   "scripts": {
-    "build": "turbo run build",
-    "dev": "turbo run dev",
-    "lint": "turbo run lint",
-    "test": "turbo run test",
-    "clean": "turbo run clean && rm -rf node_modules",
     "prepare": "lefthook install",
     "release": "semantic-release"
   },
