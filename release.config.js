@@ -12,11 +12,9 @@ module.exports = {
     ['@semantic-release/git', {
       assets: ['package.json'],
       message: 'chore(release): ${nextRelease.version} [skip ci]\n\n${nextRelease.notes}'
-    }]
-  ],
-  success: [
+    }],
     ['@semantic-release/exec', {
-      cmd: "VERSION=${nextRelease.version} && npm publish --registry https://npm.pkg.github.com --tag github-${VERSION}"
+      successCmd: 'npm publish --registry https://npm.pkg.github.com --tag github-${nextRelease.version}'
     }]
   ]
 };
