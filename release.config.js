@@ -16,7 +16,7 @@ module.exports = {
   ],
   success: [
     ['@semantic-release/exec', {
-      cmd: 'npm publish --registry https://npm.pkg.github.com --tag github'
+      cmd: "VERSION=${nextRelease.version} && npm publish --registry https://npm.pkg.github.com --tag github-${VERSION}"
     }]
   ]
 };
