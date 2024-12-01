@@ -6,7 +6,8 @@ module.exports = {
     '@semantic-release/release-notes-generator',
     ['@semantic-release/npm', {
       npmPublish: true,
-      pkgRoot: '.'
+      pkgRoot: '.',
+      registry: 'https://registry.npmjs.org/'
     }],
     ['@semantic-release/npm', {
       npmPublish: true,
