@@ -1,4 +1,4 @@
-name: Publish and release fullstack-monorepo-template
+name: release fullstack-monorepo-template
 on:
   push:
     branches: [master]
