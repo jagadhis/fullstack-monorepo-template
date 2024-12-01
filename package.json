@@ -25,6 +25,9 @@
   "bugs": {
     "url": "https://github.com/jagadhis/fullstack-monorepo-template/issues"
   },
+  "publishConfig": {
+    "registry": "https://registry.npmjs.org/"
+  },
   "bin": {
     "create-fullstack-monorepo": "template/setup.js"
   },

@@ -15,39 +15,20 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           fetch-depth: 0
 
-      - name: Setup Node.js for npm
-        uses: actions/setup-node@v3
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
         with:
           node-version: 20.8.1
-          registry-url: 'https://registry.npmjs.org/'
 
       - name: Install dependencies
         run: npm install
 
-      - name: NPM Publish
+      - name: Run Semantic Release
         env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
-        run: |
-          echo "//registry.npmjs.org/:_authToken=$NODE_AUTH_TOKEN" > .npmrc
-          echo "registry=https://registry.npmjs.org/" >> .npmrc
-          npm publish --access public
-
-      - name: Setup Node.js for GitHub Packages
-        uses: actions/setup-node@v3
-        with:
-          node-version: 20.8.1
-          registry-url: 'https://npm.pkg.github.com'
-          scope: '@jagadhis'
-
-      - name: Publish to GitHub Packages
-        if: success()
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          echo "//npm.pkg.github.com/:_authToken=$NODE_AUTH_TOKEN" > .npmrc
-          echo "@jagadhis:registry=https://npm.pkg.github.com" >> .npmrc
-          npm publish --registry https://npm.pkg.github.com
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: npx semantic-release
