@@ -28,13 +28,14 @@ jobs:
       - name: Install dependencies
         run: npm install
 
-      - name: Release to NPM
+      - name: NPM Publish
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: npx semantic-release
+        run: |
+          echo "//registry.npmjs.org/:_authToken=$NODE_AUTH_TOKEN" > .npmrc
+          echo "registry=https://registry.npmjs.org/" >> .npmrc
+          npm publish --access public
 
-      # Setup .npmrc file to publish to GitHub Packages
       - name: Setup Node.js for GitHub Packages
         uses: actions/setup-node@v3
         with:
@@ -42,11 +43,11 @@ jobs:
           registry-url: 'https://npm.pkg.github.com'
           scope: '@jagadhis'
 
-      - name: Get current version
-        id: package-version
-        run: echo "version=$(node -p "require('./package.json').version")" >> $GITHUB_OUTPUT
-
       - name: Publish to GitHub Packages
-        run: npm publish
+        if: success()
         env:
           NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          echo "//npm.pkg.github.com/:_authToken=$NODE_AUTH_TOKEN" > .npmrc
+          echo "@jagadhis:registry=https://npm.pkg.github.com" >> .npmrc
+          npm publish --registry https://npm.pkg.github.com
