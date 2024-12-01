@@ -1,19 +1,14 @@
 #!/usr/bin/env node
-import ora from 'ora';
-import { execSync } from 'child_process';
-import fs from 'fs';
-import path from 'path';
-import { fileURLToPath } from 'url';
-import { dirname } from 'path';
+import ora from 'ora'
+import { execSync } from 'child_process'
+import { existsSync, lstatSync, cpSync, copyFileSync, writeFileSync } from 'fs'
+import { join, basename } from 'path'
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
-
-async function copyTemplateFiles() {
-  const spinner = ora('Copying template files...').start();
+function copyTemplateFiles() {
+  const spinner = ora('Copying template files...').start()
   try {
-    const templateDir = path.join(__dirname);
-    const targetDir = process.cwd();
+    const templateDir = join(__dirname)
+    const targetDir = process.cwd()
 
     // Files to copy
     const filesToCopy = [
@@ -21,45 +16,45 @@ async function copyTemplateFiles() {
       'packages',
       'turbo.json',
       'tsconfig.json'
-    ];
+    ]
 
     // Copy each file/directory
     filesToCopy.forEach(file => {
-      const src = path.join(templateDir, file);
-      const dest = path.join(targetDir, file);
+      const src = join(templateDir, file)
+      const dest = join(targetDir, file)
 
-      if (fs.existsSync(src)) {
-        if (fs.lstatSync(src).isDirectory()) {
-          fs.cpSync(src, dest, { recursive: true });
+      if (existsSync(src)) {
+        if (lstatSync(src).isDirectory()) {
+          cpSync(src, dest, { recursive: true })
         } else {
-          fs.copyFileSync(src, dest);
+          copyFileSync(src, dest)
         }
       }
-    });
+    })
 
     // Create package.json for the new project
     const packageJson = {
-      name: path.basename(targetDir),
-      version: "0.1.0",
+      name: basename(targetDir),
+      version: '0.1.0',
       private: true,
       workspaces: [
-        "apps/*",
-        "packages/*"
+        'apps/*',
+        'packages/*'
       ],
       scripts: {
-        "build": "turbo run build",
-        "dev": "turbo run dev",
-        "lint": "turbo run lint",
-        "test": "turbo run test",
-        "clean": "turbo run clean && rm -rf node_modules"
+        'build': 'turbo run build',
+        'dev': 'turbo run dev',
+        'lint': 'turbo run lint',
+        'test': 'turbo run test',
+        'clean': 'turbo run clean && rm -rf node_modules'
       },
       devDependencies: {
-        "turbo": "^2.3.3"
+        'turbo': '^2.3.3'
       }
-    };
+    }
 
-    fs.writeFileSync(
-      path.join(targetDir, 'package.json'),
+    writeFileSync(
+      join(targetDir, 'package.json'),
       JSON.stringify(packageJson, null, 2)
     );
 
@@ -96,7 +91,7 @@ async function initializeProject() {
   try {
     console.log('\n🚀 Creating your fullstack monorepo...\n');
 
-    await copyTemplateFiles();
+    copyTemplateFiles();
     await initializeGit();
     await installDependencies();
 

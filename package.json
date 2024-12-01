@@ -25,10 +25,6 @@
   "bugs": {
     "url": "https://github.com/jagadhis/fullstack-monorepo-template/issues"
   },
-  "workspaces": [
-    "apps/*",
-    "packages/*"
-  ],
   "publishConfig": {
     "access": "public",
     "registry": "https://registry.npmjs.org/"
@@ -48,14 +44,15 @@
     "test": "turbo run test",
     "clean": "turbo run clean && rm -rf node_modules",
     "prepare": "lefthook install",
-    "release": "semantic-release",
-    "postinstall": "node ./template/setup.js"
+    "release": "semantic-release"
+  },
+  "dependencies": {
+    "ora": "^8.1.1"
   },
   "devDependencies": {
     "@commitlint/cli": "^19.6.0",
     "@commitlint/config-conventional": "^19.6.0",
     "lefthook": "^1.8.4",
-    "ora": "^8.1.1",
     "turbo": "^2.3.3"
   }
 }
