@@ -1,11 +1,37 @@
 #!/usr/bin/env node
-const ora = require('ora');
 const { execSync } = require('child_process');
 const fs = require('fs');
 const path = require('path');
 
+// Simple spinner implementation since ora is ESM only
+const spinner = {
+  text: '',
+  interval: null,
+  frames: ['⠋', '⠙', '⠹', '⠸', '⠼', '⠴', '⠦', '⠧', '⠇', '⠏'],
+  frameIndex: 0,
+
+  start(text) {
+    this.text = text;
+    this.interval = setInterval(() => {
+      process.stdout.write(`\r${this.frames[this.frameIndex]} ${this.text}`);
+      this.frameIndex = (this.frameIndex + 1) % this.frames.length;
+    }, 80);
+    return this;
+  },
+
+  succeed(text) {
+    clearInterval(this.interval);
+    console.log(`\r✓ ${text}`);
+  },
+
+  fail(text) {
+    clearInterval(this.interval);
+    console.log(`\r✗ ${text}`);
+  }
+};
+
 function copyTemplateFiles() {
-  const spinner = ora('Copying template files...').start();
+  const templateSpinner = spinner.start('Copying template files...');
   try {
     const templateDir = path.join(__dirname);
     const targetDir = process.cwd();
@@ -58,31 +84,31 @@ function copyTemplateFiles() {
       JSON.stringify(packageJson, null, 2)
     );
 
-    spinner.succeed('Template files copied successfully');
+    templateSpinner.succeed('Template files copied successfully');
   } catch (error) {
-    spinner.fail('Failed to copy template files');
+    templateSpinner.fail('Failed to copy template files');
     throw error;
   }
 }
 
 async function initializeGit() {
-  const spinner = ora('Initializing git repository...').start();
+  const gitSpinner = spinner.start('Initializing git repository...');
   try {
     execSync('git init', { stdio: 'ignore' });
-    spinner.succeed('Git repository initialized');
+    gitSpinner.succeed('Git repository initialized');
   } catch (error) {
-    spinner.fail('Failed to initialize git repository');
+    gitSpinner.fail('Failed to initialize git repository');
     throw error;
   }
 }
 
 async function installDependencies() {
-  const spinner = ora('Installing dependencies...').start();
+  const depsSpinner = spinner.start('Installing dependencies...');
   try {
     execSync('npm install', { stdio: 'ignore' });
-    spinner.succeed('Dependencies installed successfully');
+    depsSpinner.succeed('Dependencies installed successfully');
   } catch (error) {
-    spinner.fail('Failed to install dependencies');
+    depsSpinner.fail('Failed to install dependencies');
     throw error;
   }
 }
