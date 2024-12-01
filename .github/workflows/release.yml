@@ -28,14 +28,6 @@ jobs:
       - name: Install dependencies
         run: npm install
 
-      - name: Verify template structure
-        run: |
-          if [ ! -d "template" ]; then
-            echo "Template directory is missing!"
-            exit 1
-          fi
-          chmod +x ./template/setup.js
-
       - name: Setup NPM config
         run: |
           echo "//registry.npmjs.org/:_authToken=${NPM_TOKEN}" > .npmrc
@@ -52,12 +44,6 @@ jobs:
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
         run: npx semantic-release
-
-      - name: Publish to GitHub Packages
-        if: success()
-        run: npm run publish:github
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Cleanup
         if: always()
