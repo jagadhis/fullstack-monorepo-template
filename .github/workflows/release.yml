@@ -32,6 +32,7 @@ jobs:
         run: |
           echo "//registry.npmjs.org/:_authToken=${NPM_TOKEN}" > .npmrc
           echo "//npm.pkg.github.com/:_authToken=${GITHUB_TOKEN}" >> .npmrc
+          echo "@jagadhis:registry=https://npm.pkg.github.com" >> .npmrc
           npm config set access public
         env:
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
