@@ -19,7 +19,7 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Setup Node.js
+      - name: Setup Node.js for npm
         uses: actions/setup-node@v3
         with:
           node-version: 20.8.1
@@ -28,28 +28,25 @@ jobs:
       - name: Install dependencies
         run: npm install
 
-      - name: Setup NPM config
-        run: |
-          echo "//registry.npmjs.org/:_authToken=${NPM_TOKEN}" > .npmrc
-          echo "//npm.pkg.github.com/:_authToken=${GITHUB_TOKEN}" >> .npmrc
-          echo "@jagadhis:registry=https://npm.pkg.github.com" >> .npmrc
-          npm config set access public
-        env:
-          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
-
-      - name: Verify NPM Auth
-        run: npm whoami
+      - name: Release to NPM
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
-
-      - name: Release
-        env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
-        run: |
-          echo "Running semantic-release..."
-          npx semantic-release --debug
+        run: npx semantic-release
 
-      - name: Cleanup
-        if: always()
-        run: rm -f .npmrc
+      # Setup .npmrc file to publish to GitHub Packages
+      - name: Setup Node.js for GitHub Packages
+        uses: actions/setup-node@v3
+        with:
+          node-version: 20.8.1
+          registry-url: 'https://npm.pkg.github.com'
+          scope: '@jagadhis'
+
+      - name: Get current version
+        id: package-version
+        run: echo "version=$(node -p "require('./package.json').version")" >> $GITHUB_OUTPUT
+
+      - name: Publish to GitHub Packages
+        run: npm publish
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
