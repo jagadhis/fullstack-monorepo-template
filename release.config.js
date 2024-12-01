@@ -6,7 +6,9 @@ module.exports = {
     ['@semantic-release/npm', {
       npmPublish: true,
       tarballDir: 'dist',
-      pkgRoot: '.'
+      pkgRoot: '.',
+      registry: 'https://registry.npmjs.org/',
+      tag: 'latest'
     }],
     ['@semantic-release/github', {
       assets: [
