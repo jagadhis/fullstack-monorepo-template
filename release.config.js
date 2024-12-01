@@ -22,6 +22,16 @@ module.exports = {
       }
     ],
     [
+      '@semantic-release/npm',
+      {
+        npmPublish: true,
+        tarballDir: 'dist',
+        pkgRoot: '.',
+        registry: 'https://npm.pkg.github.com',
+        tag: 'latest'
+      }
+    ],
+    [
       '@semantic-release/git',
       {
         assets: ['package.json'],
