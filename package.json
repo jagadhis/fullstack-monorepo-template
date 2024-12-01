@@ -47,7 +47,10 @@
   "devDependencies": {
     "@commitlint/cli": "^19.6.0",
     "@commitlint/config-conventional": "^19.6.0",
+    "@semantic-release/git": "^10.0.1",
+    "@semantic-release/github": "^9.2.6",
     "lefthook": "^1.8.4",
+    "semantic-release": "^24.0.0",
     "turbo": "^2.3.3"
   }
 }
