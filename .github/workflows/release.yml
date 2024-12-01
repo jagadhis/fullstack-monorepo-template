@@ -30,14 +30,11 @@ jobs:
 
       - name: Verify template structure
         run: |
-            if [ ! -d "template" ]; then
-              echo "Template directory is missing!"
-              exit 1
-            fi
-            chmod +x ./template/setup.js  
-
-      - name: Build
-        run: npm run build
+          if [ ! -d "template" ]; then
+            echo "Template directory is missing!"
+            exit 1
+          fi
+          chmod +x ./template/setup.js
 
       - name: Setup NPM
         run: |
