@@ -9,11 +9,6 @@ module.exports = {
       pkgRoot: '.',
       registry: 'https://registry.npmjs.org/'
     }],
-    ['@semantic-release/npm', {
-      npmPublish: true,
-      pkgRoot: '.',
-      registry: 'https://npm.pkg.github.com'
-    }],
     '@semantic-release/github',
     ['@semantic-release/git', {
       assets: ['package.json'],

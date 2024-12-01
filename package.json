@@ -29,7 +29,6 @@
     "access": "public",
     "registry": "https://registry.npmjs.org/"
   },
-  "@jagadhis:registry": "https://npm.pkg.github.com",
   "bin": {
     "create-fullstack-monorepo": "template/setup.js"
   },
@@ -40,7 +39,8 @@
   "packageManager": "npm@10.8.2",
   "scripts": {
     "prepare": "lefthook install",
-    "release": "semantic-release"
+    "release": "semantic-release",
+    "publish:github": "npm publish --registry https://npm.pkg.github.com"
   },
   "devDependencies": {
     "@commitlint/cli": "^19.6.0",
