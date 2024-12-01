@@ -1,14 +1,14 @@
 #!/usr/bin/env node
-import ora from 'ora'
-import { execSync } from 'child_process'
-import { existsSync, lstatSync, cpSync, copyFileSync, writeFileSync } from 'fs'
-import { join, basename } from 'path'
+const ora = require('ora');
+const { execSync } = require('child_process');
+const fs = require('fs');
+const path = require('path');
 
 function copyTemplateFiles() {
-  const spinner = ora('Copying template files...').start()
+  const spinner = ora('Copying template files...').start();
   try {
-    const templateDir = join(__dirname)
-    const targetDir = process.cwd()
+    const templateDir = path.join(__dirname);
+    const targetDir = process.cwd();
 
     // Files to copy
     const filesToCopy = [
@@ -16,45 +16,45 @@ function copyTemplateFiles() {
       'packages',
       'turbo.json',
       'tsconfig.json'
-    ]
+    ];
 
     // Copy each file/directory
     filesToCopy.forEach(file => {
-      const src = join(templateDir, file)
-      const dest = join(targetDir, file)
+      const src = path.join(templateDir, file);
+      const dest = path.join(targetDir, file);
 
-      if (existsSync(src)) {
-        if (lstatSync(src).isDirectory()) {
-          cpSync(src, dest, { recursive: true })
+      if (fs.existsSync(src)) {
+        if (fs.lstatSync(src).isDirectory()) {
+          fs.cpSync(src, dest, { recursive: true });
         } else {
-          copyFileSync(src, dest)
+          fs.copyFileSync(src, dest);
         }
       }
-    })
+    });
 
     // Create package.json for the new project
     const packageJson = {
-      name: basename(targetDir),
-      version: '0.1.0',
+      name: path.basename(targetDir),
+      version: "0.1.0",
       private: true,
       workspaces: [
-        'apps/*',
-        'packages/*'
+        "apps/*",
+        "packages/*"
       ],
       scripts: {
-        'build': 'turbo run build',
-        'dev': 'turbo run dev',
-        'lint': 'turbo run lint',
-        'test': 'turbo run test',
-        'clean': 'turbo run clean && rm -rf node_modules'
+        "build": "turbo run build",
+        "dev": "turbo run dev",
+        "lint": "turbo run lint",
+        "test": "turbo run test",
+        "clean": "turbo run clean && rm -rf node_modules"
       },
       devDependencies: {
-        'turbo': '^2.3.3'
+        "turbo": "^2.3.3"
       }
-    }
+    };
 
-    writeFileSync(
-      join(targetDir, 'package.json'),
+    fs.writeFileSync(
+      path.join(targetDir, 'package.json'),
       JSON.stringify(packageJson, null, 2)
     );
 
