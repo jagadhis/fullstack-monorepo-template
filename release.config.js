@@ -13,7 +13,14 @@ module.exports = {
         tag: 'latest'
       }
     ],
-    '@semantic-release/github',
+    [
+      '@semantic-release/github',
+      {
+        assets: [
+          { path: 'dist/*.tgz', label: 'npm package' }
+        ]
+      }
+    ]
     [
       '@semantic-release/git',
       {
