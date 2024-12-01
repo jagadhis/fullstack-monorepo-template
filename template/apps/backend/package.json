@@ -1,0 +1,37 @@
+{
+  "name": "@jagadhis/backend",
+  "version": "0.0.0-development",
+  "private": true,
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "dev": "ts-node-dev src/index.ts",
+    "build": "tsc -p tsconfig.json",
+    "start": "node dist/index.js",
+    "test": "echo 'No tests yet'",
+    "release": "semantic-release"
+  },
+  "packageManager": "npm@10.8.2",
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "@prisma/client": "^6.0.0",
+    "express": "^4.21.1"
+  },
+  "devDependencies": {
+    "@semantic-release/git": "^10.0.1",
+    "@types/express": "^5.0.0",
+    "prisma": "^6.0.0",
+    "semantic-release": "^24.2.0",
+    "typescript": "^5.7.2"
+  }
+}

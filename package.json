@@ -34,19 +34,11 @@
     "registry": "https://registry.npmjs.org/"
   },
   "bin": {
-    "create-fullstack-monorepo": "./bin/create-app.js"
+    "create-fullstack-monorepo": "template/setup.js"
   },
   "files": [
-    "apps/",
-    "packages/",
-    "bin/",
-    ".gitignore",
-    "turbo.json",
-    "README.md",
-    "package.json",
-    "tsconfig.json",
-    ".commitlintrc.yaml",
-    "lefthook.yml"
+    "template",
+    "README.md"
   ],
   "packageManager": "npm@10.8.2",
   "scripts": {
@@ -56,12 +48,14 @@
     "test": "turbo run test",
     "clean": "turbo run clean && rm -rf node_modules",
     "prepare": "lefthook install",
-    "release": "semantic-release"
+    "release": "semantic-release",
+    "postinstall": "node ./template/setup.js"
   },
   "devDependencies": {
     "@commitlint/cli": "^19.6.0",
     "@commitlint/config-conventional": "^19.6.0",
     "lefthook": "^1.8.4",
+    "ora": "^8.1.1",
     "turbo": "^2.3.3"
   }
 }

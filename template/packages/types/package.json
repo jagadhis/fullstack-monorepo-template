@@ -1,0 +1,26 @@
+{
+  "name": "@jagadhis/types",
+  "version": "0.0.0-development",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "private": true,
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "clean": "rimraf dist",
+    "test": "echo 'No tests yet'",
+    "release": "semantic-release"
+  },
+  "packageManager": "npm@10.8.2",
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "devDependencies": {
+    "rimraf": "^5.0.10",
+    "typescript": "^5.7.2"
+  }
+}

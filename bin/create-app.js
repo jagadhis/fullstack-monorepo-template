@@ -1,69 +1,140 @@
 #!/usr/bin/env node
+import ora from 'ora';
+import { execSync } from 'child_process';
+import path from 'path';
+import fs from 'fs';
+import { fileURLToPath } from 'url';
+import { dirname } from 'path';
 
-const { execSync } = require('child_process');
-const path = require('path');
-const fs = require('fs');
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
 
-const projectName = process.argv[2];
-
-if (!projectName) {
-  console.log('Please specify the project name:');
-  console.log('  npx @jagadhis/fullstack-monorepo-template my-app');
-  process.exit(1);
+async function executeCommand(command, cwd) {
+  return execSync(command, {
+    stdio: 'inherit',
+    cwd: cwd
+  });
 }
 
-const currentDir = process.cwd();
-const projectDir = path.join(currentDir, projectName);
-
-try {
-  fs.mkdirSync(projectDir, { recursive: true });
-
-  // Copy template files
-  execSync(`cp -r ${path.join(__dirname, '../')}* ${projectDir}`);
-
-  // Remove git related files and node_modules
-  execSync(`rm -rf ${projectDir}/.git ${projectDir}/node_modules ${projectDir}/apps/*/node_modules ${projectDir}/packages/*/node_modules`);
-
-  console.log('Installing dependencies...');
-  process.chdir(projectDir);
-
-  // Initialize new git repository
-  execSync('git init');
-
-  // Install dependencies without running scripts
-  execSync('npm install --ignore-scripts');
-
-  // Install lefthook separately
+async function installDependencies(targetPath, packageName) {
+  const spinner = ora(`Installing dependencies for ${packageName}...`).start();
   try {
-    execSync('npx lefthook install', { stdio: 'inherit' });
+    await executeCommand('npm install', targetPath);
+    spinner.succeed(`Dependencies installed for ${packageName}`);
   } catch (error) {
-    console.log('Note: Lefthook installation skipped, you can install it later with: npx lefthook install');
+    spinner.fail(`Failed to install dependencies for ${packageName}`);
+    throw error;
   }
-
-  console.log(`
-Success! Created ${projectName} at ${projectDir}
-
-Inside that directory, you can run several commands:
-
-  npm run dev
-    Starts the development server.
-
-  npm run build
-    Builds the app for production.
-
-  npm run lint
-    Lints the code.
-
-To set up git hooks (optional):
-  npx lefthook install
-
-Start developing by typing:
-
-  cd ${projectName}
-  npm run dev
-  `);
-
-} catch (error) {
-  console.log('Error:', error);
-  process.exit(1);
 }
+
+async function copyTemplate(targetPath) {
+  const spinner = ora('Copying template files...').start();
+  try {
+    // Get the template directory path (relative to the installed package)
+    const templateDir = path.join(__dirname, '..');
+
+    // Copy essential files and directories
+    const filesToCopy = [
+      'apps',
+      'packages',
+      'turbo.json',
+      'tsconfig.json',
+      '.commitlintrc.yaml',
+      'lefthook.yml'
+    ];
+
+    for (const file of filesToCopy) {
+      const sourcePath = path.join(templateDir, file);
+      const destPath = path.join(targetPath, file);
+
+      if (fs.existsSync(sourcePath)) {
+        if (fs.lstatSync(sourcePath).isDirectory()) {
+          fs.cpSync(sourcePath, destPath, { recursive: true });
+        } else {
+          fs.copyFileSync(sourcePath, destPath);
+        }
+      }
+    }
+
+    // Create a new package.json with only necessary fields
+    const templatePkg = JSON.parse(fs.readFileSync(path.join(templateDir, 'package.json'), 'utf8'));
+    const newPkg = {
+      name: path.basename(targetPath),
+      version: '0.1.0',
+      private: true,
+      workspaces: templatePkg.workspaces,
+      scripts: templatePkg.scripts,
+      devDependencies: {
+        "@commitlint/cli": templatePkg.devDependencies["@commitlint/cli"],
+        "@commitlint/config-conventional": templatePkg.devDependencies["@commitlint/config-conventional"],
+        "lefthook": templatePkg.devDependencies.lefthook,
+        "turbo": templatePkg.devDependencies.turbo
+      }
+    };
+
+    fs.writeFileSync(
+      path.join(targetPath, 'package.json'),
+      JSON.stringify(newPkg, null, 2)
+    );
+
+    spinner.succeed('Template files copied successfully');
+  } catch (error) {
+    spinner.fail('Failed to copy template files');
+    throw error;
+  }
+}
+
+async function initializeGit(targetPath) {
+  const spinner = ora('Initializing git repository...').start();
+  try {
+    await executeCommand('git init', targetPath);
+    // Copy .gitignore
+    const templateDir = path.join(__dirname, '..');
+    fs.copyFileSync(
+      path.join(templateDir, '.gitignore'),
+      path.join(targetPath, '.gitignore')
+    );
+    spinner.succeed('Git repository initialized');
+  } catch (error) {
+    spinner.fail('Failed to initialize git repository');
+    throw error;
+  }
+}
+
+async function setupProject() {
+  try {
+    const targetPath = process.cwd();
+    console.log('\n🚀 Creating your fullstack monorepo...\n');
+
+    // Copy template files
+    await copyTemplate(targetPath);
+
+    // Initialize git
+    await initializeGit(targetPath);
+
+    // Install root dependencies
+    await installDependencies(targetPath, 'root');
+
+    // Install workspace dependencies
+    const workspaces = ['apps/frontend', 'apps/backend'];
+    for (const workspace of workspaces) {
+      const workspacePath = path.join(targetPath, workspace);
+      if (fs.existsSync(workspacePath)) {
+        await installDependencies(workspacePath, workspace);
+      }
+    }
+
+    console.log('\n✨ Project setup completed successfully!\n');
+    console.log('To get started:');
+    console.log('\n1. npm run dev     - Start development servers');
+    console.log('2. npm run build   - Build all packages');
+    console.log('3. npm run lint    - Lint all packages');
+    console.log('\nHappy coding! 🎉\n');
+
+  } catch (error) {
+    console.error('\n❌ Error during setup:', error);
+    process.exit(1);
+  }
+}
+
+setupProject();

@@ -1,0 +1,40 @@
+{
+  "name": "@jagadhis/frontend",
+  "version": "1.0.0",
+  "private": true,
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
+  },
+  "files": [
+    "dist",
+    ".next"
+  ],
+  "scripts": {
+    "dev": "next dev --turbopack",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint",
+    "clean": "rm -rf .turbo node_modules .next",
+    "release": "semantic-release"
+  },
+  "packageManager": "npm@10.8.2",
+  "dependencies": {
+    "next": "15.0.3",
+    "react": "19.0.0-rc-66855b96-20241106",
+    "react-dom": "19.0.0-rc-66855b96-20241106",
+    "@supabase/supabase-js": "^2.0.0"
+  },
+  "devDependencies": {
+    "@semantic-release/git": "^10.0.1",
+    "@types/node": "^20",
+    "@types/react": "^18",
+    "@types/react-dom": "^18",
+    "eslint": "^8",
+    "eslint-config-next": "15.0.3",
+    "postcss": "^8",
+    "semantic-release": "^24.2.0",
+    "tailwindcss": "^3.4.1",
+    "typescript": "^5"
+  }
+}
