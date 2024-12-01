@@ -1,6 +1,6 @@
 {
   "name": "@jagadhis/fullstack-monorepo-template",
-  "version": "1.19.0",
+  "version": "1.20.0",
   "private": false,
   "description": "A full-stack monorepo template with Next.js, Node.js, Supabase, and Prisma",
   "keywords": [
