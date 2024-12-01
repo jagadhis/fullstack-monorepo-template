@@ -25,6 +25,13 @@ jobs:
           node-version: 20.8.1
           registry-url: 'https://registry.npmjs.org/'
 
+      - name: Setup GitHub Package Registry
+        uses: actions/setup-node@v3
+        with:
+            node-version: 20.8.1
+            registry-url: 'https://npm.pkg.github.com'
+            scope: '@jagadhis'
+
       - name: Install dependencies
         run: npm install
 
@@ -39,6 +46,7 @@ jobs:
       - name: Setup NPM
         run: |
           echo "//registry.npmjs.org/:_authToken=${NPM_TOKEN}" > .npmrc
+          echo "//npm.pkg.github.com/:_authToken=${GITHUB_TOKEN}" >> .npmrc
           npm config set access public
         env:
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}

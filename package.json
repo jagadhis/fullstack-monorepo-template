@@ -19,7 +19,7 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/jagadhis/fullstack-monorepo-template.git"
+    "url": "git+https://github.com/jagadhis/fullstack-monorepo-template.git"
   },
   "homepage": "https://github.com/jagadhis/fullstack-monorepo-template#readme",
   "bugs": {
