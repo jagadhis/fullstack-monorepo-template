@@ -20,7 +20,7 @@ module.exports = {
           { path: 'dist/*.tgz', label: 'npm package' }
         ]
       }
-    ]
+    ],
     [
       '@semantic-release/git',
       {
