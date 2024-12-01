@@ -3,7 +3,7 @@ const { execSync } = require('child_process');
 const fs = require('fs');
 const path = require('path');
 
-// Simple spinner implementation since ora is ESM only
+// Simple spinner implementation
 const spinner = {
   text: '',
   interval: null,
@@ -30,13 +30,11 @@ const spinner = {
   }
 };
 
-function copyTemplateFiles() {
+function copyTemplateFiles(targetDir) {
   const templateSpinner = spinner.start('Copying template files...');
   try {
-    const templateDir = path.join(__dirname);
-    const targetDir = process.cwd();
+    const templateDir = path.resolve(__dirname);
 
-    // Files to copy
     const filesToCopy = [
       'apps',
       'packages',
@@ -44,10 +42,9 @@ function copyTemplateFiles() {
       'tsconfig.json'
     ];
 
-    // Copy each file/directory
     filesToCopy.forEach(file => {
-      const src = path.join(templateDir, file);
-      const dest = path.join(targetDir, file);
+      const src = path.resolve(templateDir, file);
+      const dest = path.resolve(targetDir, file);
 
       if (fs.existsSync(src)) {
         if (fs.lstatSync(src).isDirectory()) {
@@ -55,6 +52,8 @@ function copyTemplateFiles() {
         } else {
           fs.copyFileSync(src, dest);
         }
+      } else {
+        console.error(`File or directory not found: ${src}`);
       }
     });
 
@@ -91,10 +90,10 @@ function copyTemplateFiles() {
   }
 }
 
-async function initializeGit() {
+async function initializeGit(targetDir) {
   const gitSpinner = spinner.start('Initializing git repository...');
   try {
-    execSync('git init', { stdio: 'ignore' });
+    execSync('git init', { cwd: targetDir, stdio: 'ignore' });
     gitSpinner.succeed('Git repository initialized');
   } catch (error) {
     gitSpinner.fail('Failed to initialize git repository');
@@ -102,10 +101,10 @@ async function initializeGit() {
   }
 }
 
-async function installDependencies() {
+async function installDependencies(targetDir) {
   const depsSpinner = spinner.start('Installing dependencies...');
   try {
-    execSync('npm install', { stdio: 'ignore' });
+    execSync('npm install', { cwd: targetDir, stdio: 'ignore' });
     depsSpinner.succeed('Dependencies installed successfully');
   } catch (error) {
     depsSpinner.fail('Failed to install dependencies');
@@ -114,16 +113,33 @@ async function installDependencies() {
 }
 
 async function initializeProject() {
-  try {
-    console.log('\n🚀 Creating your fullstack monorepo...\n');
+  const projectName = process.argv[2];
 
-    copyTemplateFiles();
-    await initializeGit();
-    await installDependencies();
+  if (!projectName) {
+    console.error('❌ Please specify a project name:');
+    console.error('   npx package-name <project-name>');
+    process.exit(1);
+  }
+
+  const targetDir = path.resolve(process.cwd(), projectName);
+
+  if (fs.existsSync(targetDir)) {
+    console.error(`❌ Directory "${projectName}" already exists. Please choose a different name.`);
+    process.exit(1);
+  }
+
+  fs.mkdirSync(targetDir, { recursive: true });
+
+  try {
+    console.log(`\n🚀 Creating your fullstack monorepo in "${projectName}"...\n`);
+
+    copyTemplateFiles(targetDir);
+    await initializeGit(targetDir);
+    await installDependencies(targetDir);
 
     console.log('\n✨ Project setup completed successfully!\n');
     console.log('To get started:');
-    console.log('1. cd into your project directory');
+    console.log(`1. cd ${projectName}`);
     console.log('2. npm run dev     - Start development servers');
     console.log('3. npm run build   - Build all packages\n');
 
