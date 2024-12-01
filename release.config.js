@@ -7,7 +7,7 @@ module.exports = {
       '@semantic-release/npm',
       {
         npmPublish: true,
-        tarballDir: 'dist',
+        tarballDir: 'npm-tarball',
         pkgRoot: '.',
         registry: 'https://registry.npmjs.org/',
         tag: 'latest'
@@ -16,19 +16,7 @@ module.exports = {
     [
       '@semantic-release/github',
       {
-        assets: [
-          { path: 'dist/*.tgz', label: 'npm package' }
-        ]
-      }
-    ],
-    [
-      '@semantic-release/npm',
-      {
-        npmPublish: true,
-        tarballDir: 'dist',
-        pkgRoot: '.',
-        registry: 'https://npm.pkg.github.com',
-        tag: 'latest'
+        assets: [{ path: 'npm-tarball/*.tgz', label: 'npm package' }]
       }
     ],
     [
@@ -37,6 +25,23 @@ module.exports = {
         assets: ['package.json'],
         message: 'chore(release): ${nextRelease.version} [skip ci]\n\n${nextRelease.notes}'
       }
+    ],
+    [
+      '@semantic-release/npm',
+      {
+        npmPublish: true,
+        tarballDir: 'github-tarball',
+        pkgRoot: '.',
+        registry: 'https://npm.pkg.github.com',
+        tag: 'latest'
+      }
     ]
+  ],
+
+  prepare: [
+    {
+      path: '@semantic-release/exec',
+      cmd: 'rm -rf npm-tarball github-tarball && mkdir npm-tarball github-tarball'
+    }
   ]
 };
