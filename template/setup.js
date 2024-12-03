@@ -90,6 +90,34 @@ function copyTemplateFiles(targetDir) {
   }
 }
 
+function updatePackageNames(targetDir) {
+  const directories = [
+    path.join(targetDir, 'apps/frontend'),
+    path.join(targetDir, 'apps/backend'),
+    path.join(targetDir, 'packages/types')
+  ];
+
+  const spinnerUpdateNames = spinner.start('Updating package names in package.json files...');
+  try {
+    directories.forEach((dir) => {
+      const packageJsonPath = path.join(dir, 'package.json');
+
+      if (fs.existsSync(packageJsonPath)) {
+        const packageJson = JSON.parse(fs.readFileSync(packageJsonPath, 'utf8'));
+        packageJson.name = path.basename(dir);
+        fs.writeFileSync(packageJsonPath, JSON.stringify(packageJson, null, 2));
+        console.log(`✓ Updated "name" in ${packageJsonPath} to "${packageJson.name}"`);
+      } else {
+        console.warn(`⚠️ No package.json found in ${dir}`);
+      }
+    });
+    spinnerUpdateNames.succeed('Package names updated successfully');
+  } catch (error) {
+    spinnerUpdateNames.fail('Failed to update package names');
+    throw error;
+  }
+}
+
 async function initializeGit(targetDir) {
   const gitSpinner = spinner.start('Initializing git repository...');
   try {
@@ -134,6 +162,7 @@ async function initializeProject() {
     console.log(`\n🚀 Creating your fullstack monorepo in "${projectName}"...\n`);
 
     copyTemplateFiles(targetDir);
+    updatePackageNames(targetDir);
     await initializeGit(targetDir);
     await installDependencies(targetDir);
 
