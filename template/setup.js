@@ -106,7 +106,6 @@ function updatePackageNames(targetDir) {
         const packageJson = JSON.parse(fs.readFileSync(packageJsonPath, 'utf8'));
         packageJson.name = path.basename(dir);
         fs.writeFileSync(packageJsonPath, JSON.stringify(packageJson, null, 2));
-        console.log(`✓ Updated "name" in ${packageJsonPath} to "${packageJson.name}"`);
       } else {
         console.warn(`⚠️ No package.json found in ${dir}`);
       }
