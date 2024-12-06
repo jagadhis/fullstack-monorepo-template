@@ -1,4 +1,5 @@
 # Full-stack Monorepo Template
+![Socket Badge](https://socket.dev/api/badge/npm/package/@jagadhis/fullstack-monorepo-template/1.30.0)
 
 A modern, production-ready monorepo template featuring Next.js, Node.js, Supabase, and Prisma.
 
