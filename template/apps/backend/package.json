@@ -32,6 +32,7 @@
     "@types/express": "^5.0.0",
     "prisma": "^6.0.0",
     "semantic-release": "^24.2.0",
+    "ts-node-dev": "^2.0.0",
     "typescript": "^5.7.2"
   }
 }

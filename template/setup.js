@@ -73,6 +73,7 @@ function copyTemplateFiles(targetDir) {
         "test": "turbo run test",
         "clean": "turbo run clean && rm -rf node_modules"
       },
+      packageManager: "npm@10.8.2",
       devDependencies: {
         "turbo": "^2.3.3"
       }
