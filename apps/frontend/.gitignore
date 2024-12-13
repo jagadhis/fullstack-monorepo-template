@@ -10,6 +10,9 @@
 !.yarn/releases
 !.yarn/versions
 
+
+package-lock.json
+
 # testing
 /coverage
 
@@ -30,8 +33,8 @@ yarn-debug.log*
 yarn-error.log*
 
 # env files (can opt-in for committing if needed)
-.env*
-.env.local
+../../template/apps/frontend/.env.local
+../../template/apps/frontend/.env.local
 
 # vercel
 .vercel
