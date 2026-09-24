@@ -39,7 +39,8 @@ function copyTemplateFiles(targetDir) {
       'apps',
       'packages',
       'turbo.json',
-      'tsconfig.json'
+      'tsconfig.json',
+      '.env'
     ];
 
     filesToCopy.forEach(file => {

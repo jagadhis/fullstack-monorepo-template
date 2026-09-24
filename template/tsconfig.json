@@ -14,7 +14,12 @@
     "resolveJsonModule": true,
     "isolatedModules": true,
     "jsx": "preserve",
-    "incremental": true
+    "incremental": true,
+    "baseUrl": ".",
+    "paths": {
+      "@jagadhis/types": ["packages/types/src"],
+      "@jagadhis/types/*": ["packages/types/src/*"]
+    }
   },
   "exclude": ["node_modules"],
   "references": [

@@ -11,14 +11,15 @@
   "scripts": {
     "build": "tsc -p tsconfig.json",
     "clean": "rimraf dist",
+    "dev": "tsc -w",
     "test": "echo 'No tests yet'",
     "release": "semantic-release"
   },
   "packageManager": "npm@10.8.2",
-  "keywords": [],
+  "keywords": ["typescript", "types", "shared"],
   "author": "",
   "license": "ISC",
-  "description": "",
+  "description": "Shared TypeScript types for the fullstack monorepo",
   "devDependencies": {
     "rimraf": "^5.0.10",
     "typescript": "^5.7.2"

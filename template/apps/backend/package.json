@@ -24,7 +24,10 @@
   "license": "ISC",
   "description": "",
   "dependencies": {
+    "@jagadhis/types": "*",
     "@prisma/client": "^6.0.0",
+    "@supabase/supabase-js": "^2.47.6",
+    "dotenv": "^16.4.7",
     "express": "^4.21.1"
   },
   "devDependencies": {
